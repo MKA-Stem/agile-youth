@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from database.db import connect, r
 from time import time
-from server_utils.ranking.weightCalc import weight
+#from server_utils.ranking.weightCalc import weight
 import os
 
 api = Blueprint("api", __name__, static_folder=None, template_folder=None)
@@ -33,10 +33,10 @@ def make_post(req=None):
             "title":req["title"],
             "description":req["description"],
             "timeCreated":nowTime,
-            "comments":None,
+            "comments":[],
             "upvotes":1,
-            "downvotes":0,
-            "weight":weight(1, 0, nowTime, startTime) #To be changed
+            "downvotes":0
+            #"weight":weight(1, 0, nowTime, startTime) #To be changed
         }).run(cn)
 
     return jsonify({ "post creation":"ok" })
@@ -51,13 +51,12 @@ def upvote(req=None):
 
         post = posts.get(req["id"])
         post.update({
-            "upvotes":post["upvotes"] + 1, 
-            "weight":1
-            # weight(
-            #     post["upvotes"] + 1, 
-            #     post["downvotes"], 
-            #     post["timeCreated"],
-            #     startTime)
+            "upvotes":post["upvotes"] + 1 
+            #"weight":weight(
+             #    post["upvotes"] + 1, 
+             #    post["downvotes"], 
+             #    post["timeCreated"],
+             #    startTime)
             }, non_atomic=True).run(cn)
 
     return jsonify({ "post upvotation":"ok" })
@@ -70,12 +69,35 @@ def downvote(req=None):
     with connect() as cn:
         posts = r.table("posts")
 
-        post = posts.filter({ "id":req["id"] })
-
-        post.update({ "downvotes":post["downvotes"] + 1}).run(cn)
-        post.update({ "weight":weight(post["upvotes"], post["downvotes"], post["timeCreated"])}).run(cn)
+        post = posts.get(req["id"])
+        post.update({
+            "downvotes":post["downvotes"] + 1
+            #"weight":weight(
+            #     post["upvotes"], 
+            #     post["downvotes"] + 1, 
+            #     post["timeCreated"],
+            #     startTime)
+            }, non_atomic=True).run(cn)
 
     return jsonify({ "post downvotation":"ok" })
+
+@api.route("/comment", methods=["POST"])
+def comment(req=None):
+    if(req is None):
+        req = request.json
+
+    with connect() as cn:
+        posts = r.table("posts")
+
+        post = posts.get(req["id"])
+        post.update({
+            "comments": post["comments"].append({
+                "comment":req["comment"],
+                "timeCreated":currentTime(),
+            })
+        }, non_atomic=True).run(cn)
+
+    return jsonify({ "comment creation":"ok" })
 
 #return posts from database
 @api.route("/posts", methods=["GET"])
