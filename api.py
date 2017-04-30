@@ -12,3 +12,9 @@ def test():
 @api.route("/<path:path>")
 def not_found(path):
     return jsonify({ "Not Found":path })
+
+class ERRORS():
+    """400 Errors"""
+    BAD_CREDS = ('{"error":"Bad credentials"}', 400)
+    BAD_REQ = ('{"error":"Bad request"})', 400)
+    BAD_AUTH = ('{"error":"Bad authentication"}', 400)
