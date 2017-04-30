@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from database.db import connect, r
 from time import time
+from server_utils.ranking.weightCalc import weight
 import os
 
 api = Blueprint("api", __name__, static_folder=None, template_folder=None)
@@ -28,13 +29,17 @@ def make_post(req=None):
     with connect() as cn:
         posts = r.table("posts")
         
+        currentTime = lambda: int(round(time() * 1000))
+        nowTime = currentTime()
+
         inserted = posts.insert({
             "title":req["title"],
             "description":req["description"],
-            "score":1,
-            "timeCreated":time(),
+            "timeCreated":nowTime,
             "comments":None,
-            "weight":100 #To be changed
+            "upvotes":1,
+            "downvotes":0,
+            "weight":weight(1, 0, nowTime) #To be changed
         }).run(cn)
 
     return jsonify({ "post-created":True })
