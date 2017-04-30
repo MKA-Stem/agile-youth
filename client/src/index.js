@@ -11,12 +11,16 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 // Create Redux store
 import reducer from "state";
+import {fetchPosts} from "state";
 const store = createStore(reducer, applyMiddleware(thunk));
 
 // For debugging
 if(process.env.NODE_ENV !== "production"){
   window.store = store
 }
+
+// Load posts for everything
+store.dispatch(fetchPosts())
 
 ReactDOM.render(
 	<Provider store={store}>

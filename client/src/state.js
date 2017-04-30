@@ -1,5 +1,5 @@
 const defaultState = {
-	posts:[]
+	posts:[],
 	postsLoading:false
 }
 
@@ -37,7 +37,6 @@ export function fetchPosts(){
 				}
 			})
 			.then(j => {
-				console.dir(j)
 				dispatch(setPosts(j.posts));
 			})
 	}
