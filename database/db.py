@@ -30,8 +30,12 @@ def setup():
     if DB_NAME not in r.db_list().run(cn):
         r.db_create(DB_NAME).run(cn)
 
-    maketable("users")
-    makeindex("users", "username")
+    maketable("posts")
+    makeindex("posts", "title")
+    makeindex("posts", "desc")
+    makeindex("posts", "score")
+    makeindex("posts", "id")
+    makeindex("posts", "timeCreated")
 
 
 r = r
