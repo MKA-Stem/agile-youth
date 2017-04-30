@@ -1,10 +1,18 @@
+
 body {
     font-family: -apple-system, "Avenir Next", "Myriad Set Pro", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
     -webkit-font-smoothing: antialiased;
     font-size:100%;
-	width:100%;
 	margin:0;
 	padding:0;
+}
+html {
+    background-color: #eee;
+}
+
+.container{
+	max-width:700px;
+	margin:0 auto;
 }
 
 .logo {

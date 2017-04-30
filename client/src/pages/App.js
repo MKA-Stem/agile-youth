@@ -32,12 +32,14 @@ const App = ({posts}) => (<div>
             </ul>
         </div>
     </div>
-
-	<Switch>
-		<Route exact path="/" component={PostList}/>
-		<Route path="/post/:postId" component={PostDetail}/>
-		<Route path="*" component={notFound}/>
-	</Switch>
+	
+	<div className="container">
+		<Switch>
+			<Route exact path="/" component={PostList}/>
+			<Route path="/post/:postId" component={PostDetail}/>
+			<Route path="*" component={notFound}/>
+		</Switch>
+	</div>
 </div>);
 
 export default App;
