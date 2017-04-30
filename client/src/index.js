@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from 'pages/App';
+import {BrowserRouter as Router} from "react-router-dom";
 
 // Global styles
 // import 'index.css';
@@ -17,8 +18,10 @@ if(process.env.NODE_ENV === "production"){
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+	<Provider store={store}>
+		<Router>
+			<App />
+		</Router>
+	</Provider>,
   document.getElementById('root')
 );
