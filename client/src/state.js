@@ -37,7 +37,16 @@ export function fetchPosts(){
 				}
 			})
 			.then(j => {
-				dispatch(setPosts(j.posts));
+				let sorted = j.posts.sort((a,b) => {
+					if (a.upvotes>b.upvotes) {
+						return -1;
+					}
+					if (a.upvotes<b.upvotes) {
+						return 1;
+					}
+					return 0;
+				})
+				dispatch(setPosts(sorted));
 			})
 	}
 }
