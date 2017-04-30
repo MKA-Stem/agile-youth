@@ -36,6 +36,7 @@ def setup():
     makeindex("posts", "score")
     makeindex("posts", "id")
     makeindex("posts", "timeCreated")
+    makeindex("posts", "comments")
 
 
 r = r
