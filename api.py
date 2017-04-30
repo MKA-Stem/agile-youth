@@ -41,11 +41,15 @@ def make_post(req=None):
 
 #return posts from database
 @api.route("/posts", methods=["GET"])
-def post():
-    return jsonify(
-        {"posts":[{"title":"No More Vegetarian Food", "description":"we need normal people food!","score":1000, "id":69},
-        {"title":"Vote Cole", "description":"Cole for prez!","score":345, "id":420}]} # dummy values
-    )
+def list_posts():
+    with connect() as cn:
+        posts = r.table("posts").run(cn)
+
+        postsList = []
+        for post in posts:
+            postsList.append(post)
+
+        return jsonify({"posts":postsList})
 
 #404
 @api.route("/<path:path>")
