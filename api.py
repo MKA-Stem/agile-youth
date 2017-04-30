@@ -49,17 +49,16 @@ def upvote(req=None):
     with connect() as cn:
         posts = r.table("posts")
 
-        post = posts.get(req["id"]).run(cn)
-
-        print(type(post["upvotes"]))
-        post.update({ 
+        post = posts.get(req["id"])
+        post.update({
             "upvotes":post["upvotes"] + 1, 
-            "weight":weight(
-                post["upvotes"] + 1, 
-                post["downvotes"], 
-                post["timeCreated"],
-                startTime)
-            }).run(cn)
+            "weight":1
+            # weight(
+            #     post["upvotes"] + 1, 
+            #     post["downvotes"], 
+            #     post["timeCreated"],
+            #     startTime)
+            }, non_atomic=True).run(cn)
 
     return jsonify({ "post upvotation":"ok" })
 
