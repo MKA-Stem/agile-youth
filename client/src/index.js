@@ -20,7 +20,8 @@ if(process.env.NODE_ENV !== "production"){
 }
 
 // Load posts for everything
-store.dispatch(fetchPosts())
+window.updateData = () => store.dispatch(fetchPosts())
+window.updateData();
 
 ReactDOM.render(
 	<Provider store={store}>
