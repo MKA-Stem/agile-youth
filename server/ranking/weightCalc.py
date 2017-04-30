@@ -1,4 +1,4 @@
-from datetime import time
+import time
 from math import log
 
 currentTimeMilli = lambda: int(round(time.time() * 1000))
@@ -11,5 +11,6 @@ def weight(likes, dislikes, postTime):
     likeScore = likes - dislikes
     order = log(max(likeScore, 1), 10)
     sign = 1 if likeScore > 0 else 0 if likeScore == 0 else -1
-    round(sign * order + seconds / HALF_LIFE, 7)
+
+    return round(sign * order + seconds / HALF_LIFE, 7)
 
