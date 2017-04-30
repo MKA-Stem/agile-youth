@@ -12,11 +12,6 @@ class ERRORS():
     BAD_REQ = ('{"error":"Bad request"})', 400)
     BAD_AUTH = ('{"error":"Bad authentication"}', 400)
 
-#API TEST
-@api.route("/test", methods=["GET"])
-def test():
-    return jsonify({ "test":"yes" }), 200
-
 #Post Creation
 # Requires the following arguments:
 #   title
