@@ -1,6 +1,12 @@
 const defaultState = {
 	posts:[
-		{title:"test", description:"Long text goes here!"}
+		{id: 1, title:"test", description:"Long text goes here!", score:1234},
+		{id: 2, title:"test", description:"Long text goes here!", score:1234},
+		{id: 3, title:"test", description:"Long text goes here!", score:1234},
+		{id: 4, title:"test", description:"Long text goes here!", score:1234},
+		{id: 5, title:"test", description:"Long text goes here!", score:1234},
+		{id: 6, title:"test", description:"Long text goes here!", score:1234},
+		{id: 7, title:"test", description:"Long text goes here!", score:1234},
 	]
 }
 

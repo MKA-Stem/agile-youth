@@ -1,11 +1,9 @@
 import React from 'react';
 import { connect } from "react-redux";
+import Post from "components/Post";
 
 const App = ({posts}) => (<div>
-	{posts.map(p => <div>
-		<h1>{p.title}</h1>
-		<p>{p.description}</p>
-	</div>)}
+	{posts.map(p => <Post {...p} key={p.id}/>)}
 </div>);
 
 const mapStateToProps = (state) => ({
