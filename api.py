@@ -1,8 +1,15 @@
 from flask import Blueprint, jsonify, request
 from database.db import connect, r
+from time import time
 import os
 
 api = Blueprint("api", __name__, static_folder=None, template_folder=None)
+
+class ERRORS():
+    """400 Errors"""
+    BAD_CREDS = ('{"error":"Bad credentials"}', 400)
+    BAD_REQ = ('{"error":"Bad request"})', 400)
+    BAD_AUTH = ('{"error":"Bad authentication"}', 400)
 
 #API TEST
 @api.route("/test", methods=["GET"])
@@ -11,8 +18,8 @@ def test():
 
 #Post Creation
 # Requires the following arguments:
-#   Title
-#   Description
+#   title
+#   description
 @api.route("/make-post", methods=["POST"])
 def make_post(req=None):
     if(req is None):
@@ -21,24 +28,26 @@ def make_post(req=None):
     with connect() as cn:
         posts = r.table("posts")
         
+        inserted = posts.insert({
+            "title":req["title"],
+            "description":req["description"],
+            "score":1,
+            "timeCreated":time(),
+            "comments":None,
+            "weight":100 #To be changed
+        }).run(cn)
 
-
+    return jsonify({ "post-created":True })
 
 #return posts from database
 @api.route("/posts", methods=["GET"])
 def post():
     return jsonify(
-        {"posts":[{"title":"No More Vegetarian Food", "desc":"we need normal people food!","score":1000, "id":69},
-        {"title":"Vote Cole", "desc":"Cole for prez!","score":345, "id":420}]} # dummy values
+        {"posts":[{"title":"No More Vegetarian Food", "description":"we need normal people food!","score":1000, "id":69},
+        {"title":"Vote Cole", "description":"Cole for prez!","score":345, "id":420}]} # dummy values
     )
 
 #404
 @api.route("/<path:path>")
 def not_found(path):
     return jsonify({ "Not Found":path }), 404
-
-class ERRORS():
-    """400 Errors"""
-    BAD_CREDS = ('{"error":"Bad credentials"}', 400)
-    BAD_REQ = ('{"error":"Bad request"})', 400)
-    BAD_AUTH = ('{"error":"Bad authentication"}', 400)
