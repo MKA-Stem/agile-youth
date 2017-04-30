@@ -6,3 +6,9 @@
 	padding:20px;
 	box-shadow: 0px 0px 10px -2px rgba(0,0,0,0.75);
 }
+
+.Post_link{
+	color:#222;
+	text-decoration:none;
+	font-weight:300;
+}
