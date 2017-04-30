@@ -12,3 +12,15 @@
 	text-decoration:none;
 	font-weight:300;
 }
+
+.Post_comments-header{
+	font-size:30px;
+	color:#555;
+	margin-top:30px;
+	margin-bottom:10px;
+}
+
+.Post_comment{
+	color:#555;
+	margin-bottom:5px;
+}
