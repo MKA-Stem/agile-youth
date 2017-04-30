@@ -6,6 +6,9 @@ import os
 
 api = Blueprint("api", __name__, static_folder=None, template_folder=None)
 
+currentTime = lambda: int(round(time() * 1000))
+startTime = currentTime()
+
 class ERRORS():
     """400 Errors"""
     BAD_CREDS = ('{"error":"Bad credentials"}', 400)
@@ -24,7 +27,6 @@ def make_post(req=None):
     with connect() as cn:
         posts = r.table("posts")
         
-        currentTime = lambda: int(round(time() * 1000))
         nowTime = currentTime()
 
         inserted = posts.insert({
@@ -34,10 +36,47 @@ def make_post(req=None):
             "comments":None,
             "upvotes":1,
             "downvotes":0,
-            "weight":weight(1, 0, nowTime) #To be changed
+            "weight":weight(1, 0, nowTime, startTime) #To be changed
         }).run(cn)
 
-    return jsonify({ "post-created":True })
+    return jsonify({ "post creation":"ok" })
+
+@api.route("/upvote", methods=["POST"])
+def upvote(req=None):
+    if(req is None):
+        req = request.json
+
+    with connect() as cn:
+        posts = r.table("posts")
+
+        post = posts.get(req["id"]).run(cn)
+
+        print(type(post["upvotes"]))
+        post.update({ 
+            "upvotes":post["upvotes"] + 1, 
+            "weight":weight(
+                post["upvotes"] + 1, 
+                post["downvotes"], 
+                post["timeCreated"],
+                startTime)
+            }).run(cn)
+
+    return jsonify({ "post upvotation":"ok" })
+
+@api.route("/downvote", methods=["POST"])
+def downvote(req=None):
+    if(req is None):
+        req = request.json
+
+    with connect() as cn:
+        posts = r.table("posts")
+
+        post = posts.filter({ "id":req["id"] })
+
+        post.update({ "downvotes":post["downvotes"] + 1}).run(cn)
+        post.update({ "weight":weight(post["upvotes"], post["downvotes"], post["timeCreated"])}).run(cn)
+
+    return jsonify({ "post downvotation":"ok" })
 
 #return posts from database
 @api.route("/posts", methods=["GET"])
