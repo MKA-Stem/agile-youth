@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from database.db import connect, r
 from time import time
-#from server_utils.ranking.weightCalc import weight
+from server_utils.ranking.weightCalc import weight
 import os
 
 api = Blueprint("api", __name__, static_folder=None, template_folder=None)
@@ -35,8 +35,8 @@ def make_post(req=None):
             "timeCreated":nowTime,
             "comments":[],
             "upvotes":1,
-            "downvotes":0
-            #"weight":weight(1, 0, nowTime, startTime) #To be changed
+            "downvotes":0,
+            "weight":weight(1, 0, nowTime, startTime) #To be changed
         }).run(cn)
 
     return jsonify({ "post creation":"ok" })
@@ -51,12 +51,12 @@ def upvote(req=None):
 
         post = posts.get(req["id"])
         post.update({
-            "upvotes":post["upvotes"] + 1 
-            #"weight":weight(
-             #    post["upvotes"] + 1, 
-             #    post["downvotes"], 
-             #    post["timeCreated"],
-             #    startTime)
+            "upvotes":post["upvotes"].run(cn) + 1,
+            "weight":weight(
+                 post["upvotes"].run(cn) + 1, 
+                 post["downvotes"].run(cn), 
+                 post["timeCreated"].run(cn),
+                 startTime)
             }, non_atomic=True).run(cn)
 
     return jsonify({ "post upvotation":"ok" })
@@ -71,12 +71,12 @@ def downvote(req=None):
 
         post = posts.get(req["id"])
         post.update({
-            "downvotes":post["downvotes"] + 1
-            #"weight":weight(
-            #     post["upvotes"], 
-            #     post["downvotes"] + 1, 
-            #     post["timeCreated"],
-            #     startTime)
+            "downvotes":post["downvotes"].run(cn) + 1,
+            "weight":weight(
+                 post["upvotes"].run(cn), 
+                 post["downvotes"].run(cn) + 1, 
+                 post["timeCreated"].run(cn),
+                 startTime)
             }, non_atomic=True).run(cn)
 
     return jsonify({ "post downvotation":"ok" })
