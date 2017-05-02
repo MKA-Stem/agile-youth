@@ -38,10 +38,10 @@ export function fetchPosts(){
 			})
 			.then(j => {
 				let sorted = j.posts.sort((a,b) => {
-					if (a.upvotes>b.upvotes) {
+					if (a.weight>b.weight) {
 						return -1;
 					}
-					if (a.upvotes<b.upvotes) {
+					if (a.weight<b.weight) {
 						return 1;
 					}
 					return 0;
